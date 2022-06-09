@@ -16,7 +16,7 @@ def compare_faces(bucket, key):
         TargetImage={
             "S3Object": {
                 "Bucket": bucket,
-                "Name": "testJH.jpg"
+                "Name": ".jpg"
             }
         }
     )
@@ -40,7 +40,7 @@ def lambda_handler(event, context):
     results = ''
     mqtt = boto3.client('iot-data', region_name='ap-northeast-2')
 
-    bucket_name = 'esp32-rekognition-148449518658'
+    bucket_name = ''
     file_name = str(event['payload'])
 
     res= compare_faces(bucket_name, file_name)
@@ -58,7 +58,7 @@ def lambda_handler(event, context):
 
 
     response = mqtt.publish(
-        topic='esp32/sub/data',
+        topic='',
         qos=0,
         payload=results
     )
