@@ -11,8 +11,8 @@
 // Change the WIFI name and password
 // Change the awswebaddress below
 
-const char* ssid = ;
-const char* password = ;
+const char* ssid = /*"SK_WiFiGIGA8DB8"*/"내와이파이";
+const char* password = /*"1810008032"*/"25802580";
 int capture_interval = 10000; // Microseconds between captures
 
 bool internet_connected = false;
@@ -141,9 +141,7 @@ static esp_err_t take_send_photo()
   Serial.println("Taking picture...");
   camera_fb_t * fb = NULL;
   esp_err_t res = ESP_OK;
-
-
- 
+  
   fb = esp_camera_fb_get();
   if (!fb) {
     Serial.println("Camera capture failed");
@@ -182,7 +180,7 @@ static esp_err_t take_send_photo()
    Serial.print("Time:" );  Serial.println(Time);
    Serial.print("MAC: ");  Serial.println(MAC);
 
-   String post_url2 = /*apigatewayaddress*/ + MAC + "/" + Time; // Location where images are POSTED
+   String post_url2 = "https://prgb6ll9wl.execute-api.ap-northeast-2.amazonaws.com/prod/" + MAC + "/" + Time; // Location where images are POSTED
    Serial.println(post_url2);
    char post_url3[post_url2.length() + 1];
    post_url2.toCharArray(post_url3, sizeof(post_url3));
