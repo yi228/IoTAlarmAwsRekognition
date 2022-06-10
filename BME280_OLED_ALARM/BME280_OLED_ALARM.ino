@@ -30,11 +30,11 @@
 
 // Replace with your network credentials
 #if SWAP
-  const char *ssid = /*"SK_WiFiGIGA8DB8"*/"HAM";
-const char *password = /*"1810008032"*/"GUKIMSEOLEE"; // password should be long!!
+  const char *ssid = /*"SK_WiFiGIGA8DB8"*/"내와이파이";
+const char *password = /*"1810008032"*/"25802580"; // password should be long!!
 #else
-const char *ssid = /*"SK_WiFiGIGA8DB8"*/"HAM";
-const char *password = /*"1810008032"*/"GUKIMSEOLEE";
+const char *ssid = /*"SK_WiFiGIGA8DB8"*/"내와이파이";
+const char *password = /*"1810008032"*/"25802580";
 #endif
 
 WiFiServer server(80);
@@ -57,8 +57,8 @@ const int analogPin = 25;
 int delayTime;
 
 int waterVal = 0;
-const int touchThread = 15;
-const int waterThread = 2200;
+const int touchThread = 20;
+const int waterThread = 1800;
 
 bool stop = false;
 bool firstLock = false;
@@ -94,10 +94,10 @@ Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
 String hourZeroToTwelve = "<label class=\"label\">Hour</label><div class=\"select\"> <select name=\"hour\"> <option>0</option> <option>1</option> <option>2</option> <option>3</option> <option>4</option> <option>5</option> <option>6</option> <option>7</option> <option>8</option> <option>9</option> <option>10</option> <option>11</option> <option>12</option> <option>13</option> <option>14</option> <option>15</option> <option>16</option> <option>17</option> <option>18</option> <option>19</option> <option>20</option> <option>21</option> <option>22</option> <option>23</option> </select> </div>";
 String minuteZeroToSixty = "<label class=\"label\">Minute</label><div class=\"select\"> <select name=\"minute\"> <option>0</option> <option>1</option> <option>2</option> <option>3</option> <option>4</option> <option>5</option> <option>6</option> <option>7</option> <option>8</option> <option>9</option> <option>10</option> <option>11</option> <option>12</option> <option>13</option> <option>14</option> <option>15</option> <option>16</option> <option>17</option> <option>18</option> <option>19</option> <option>20</option> <option>21</option> <option>22</option> <option>23</option> <option>24</option> <option>25</option> <option>26</option> <option>27</option> <option>28</option> <option>29</option> <option>30</option> <option>31</option> <option>32</option> <option>33</option> <option>34</option> <option>35</option> <option>36</option> <option>37</option> <option>38</option> <option>39</option> <option>40</option> <option>41</option> <option>42</option> <option>43</option> <option>44</option> <option>45</option> <option>46</option> <option>47</option> <option>48</option> <option>49</option> <option>50</option> <option>51</option> <option>52</option> <option>53</option> <option>54</option> <option>55</option> <option>56</option> <option>57</option> <option>58</option> <option>59</option> </select> </div>";
-String musics = "<label class=\"label\">Music</label><div class=\"select\"> <select name=\"music\"> <option>Atheism</option> <option>Buddhism</option> <option>Christian</option> </select> </div>";
+//String musics = "<label class=\"label\">Music</label><div class=\"select\"> <select name=\"music\"> <option>Atheism</option> <option>Buddhism</option> <option>Christian</option> </select> </div>";
 String getHour = "";
 String getMin = "";
-String getMusic = "";
+//String getMusic = "";
 
 // 레코그니션
 char HOST_ADDRESS[]="akiub8kep5cue-ats.iot.ap-northeast-2.amazonaws.com";
@@ -152,10 +152,10 @@ String printLocalTime()
   nowTime += (" Day: " + String(timeinfo.tm_mday)+ "  " + String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + ":" + String(timeinfo.tm_sec) + "\n");
   if(String(timeinfo.tm_hour) == getHour && String(timeinfo.tm_min) == getMin)
   {
-    /*Serial.println("#######Saved Note is Playing.....#######");
-    playAlarm();
-    getRekResult();*/
     alarmSet=1;
+  }
+  else{
+    return "ERROR";
   }
   return nowTime;
 }
@@ -219,10 +219,10 @@ void api()
               Serial.println("Got Hour: " + getHour);
               
               Serial.println("Got Min: " + getMin);
-              getMusic = header.substring(header.indexOf("&music=")+7, header.indexOf("&music=")+15);
-              Serial.println("Got Music: " + getMusic);
-              getMusic.trim();
-              Serial.println(getMusic.length());
+              //getMusic = header.substring(header.indexOf("&music=")+7, header.indexOf("&music=")+15);
+              //Serial.println("Got Music: " + getMusic);
+              //getMusic.trim();
+              //Serial.println(getMusic.length());
             }
             // Display the HTML web page
             client.println("<!DOCTYPE html><html>");
@@ -242,7 +242,10 @@ void api()
             
             //display Clock interface
             String now_Time = printLocalTime();
-            if(now_Time != old_Time)
+            if(printLocalTime()=="ERROR"){
+              Serial.println("close the website");
+            }
+            else if(now_Time != old_Time)
             {
               old_Time = now_Time;
             }
@@ -259,13 +262,17 @@ void api()
             client.println("<p>");
             client.println("<form action=\"/get\">");
         
+        
             client.println(hourZeroToTwelve);
             client.println(minuteZeroToSixty);
-            client.println(musics);
+            //client.println(musics);
             client.println("<br><input type=\"submit\" value=\"Submit\">");
-            client.println("<button type=\"botton\" onclick=\"location.href=\'192.168.0.30\'\">Refresh</button>");
             client.println("</form><div class=\"control\"></div></p>");
-            
+
+            // 쿼리스트링
+             client.println("<button type=\"botton\" onclick=\"location.href=\'http://192.168.38.232/get?hour=00&minute=00'\">Refresh!</button>");
+
+            //
             client.println("</body></html>");
             // The HTTP response ends with another blank line
             client.println();
@@ -294,11 +301,12 @@ void api()
   } //** if (client) {
 }
 
+IPAddress IP;
 void setting()
 {
     #if SWAP
   WiFi.softAP(ssid, password);
-  IPAddress IP = WiFi.softAPIP();
+  IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(IP);
 #else
@@ -339,8 +347,6 @@ void playAlarm(){
   SPIFFS.begin();
 
   Serial.println("Created sample source");
-
-  // sampleSource = new SinWaveGenerator(40000, 10000, 0.75);
 
   sampleSource = new WAVFileReader("/sample.wav");
 
@@ -514,6 +520,20 @@ void DisplayBathroom(){
   display.setCursor(0,0);
 }
 
+void DisplayIP(){
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.println();
+  display.println();
+  display.println();
+  display.println();
+  display.println("Connect to 192.168.38.232");
+  display.display();
+  delay(delayTime);
+  display.clearDisplay();
+  display.setCursor(0,0);
+}
+
 void ReadWater(){
   if(stop == false){
     waterVal = analogRead(waterPin);
@@ -587,7 +607,7 @@ void DisplayEnd(){
   display.print("Alarm OFF!!!");
   display.println();
   display.println();
-  display.print("Have a Very Nice Day!!!");
+  display.print("Have a Very Nice Day!");
   display.println();
   display.println();
   display.print("Push Enable Button to restart");
@@ -609,6 +629,8 @@ void setup() {
   delayTime = 1000;
   startDis();
   delay(2000);
+  DisplayIP();
+  delay(10000);
 }
 
 int alCount =0;
