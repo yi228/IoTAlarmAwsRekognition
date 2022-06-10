@@ -30,11 +30,11 @@
 
 // Replace with your network credentials
 #if SWAP
-  const char *ssid = /*"SK_WiFiGIGA8DB8"*/"내와이파이";
-const char *password = /*"1810008032"*/"25802580"; // password should be long!!
+  const char *ssid = ;
+const char *password = ; // password should be long!!
 #else
-const char *ssid = /*"SK_WiFiGIGA8DB8"*/"내와이파이";
-const char *password = /*"1810008032"*/"25802580";
+const char *ssid = ;
+const char *password = ;
 #endif
 
 WiFiServer server(80);
@@ -100,8 +100,8 @@ String getMin = "";
 //String getMusic = "";
 
 // 레코그니션
-char HOST_ADDRESS[]="akiub8kep5cue-ats.iot.ap-northeast-2.amazonaws.com";
-char CLIENT_ID[]= "ChoiESP32";
+char HOST_ADDRESS[]=;
+char CLIENT_ID[]= ;
 char sTOPIC_NAME[]= "esp32/sub/data"; // subscribe topic name
 char pTOPIC_NAME[]= "esp32/pub/data"; // publish topic name
 int status = WL_IDLE_STATUS;
